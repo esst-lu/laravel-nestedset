@@ -831,7 +831,7 @@ class QueryBuilder extends Builder
                 $this->model->applyNestedSetScope($existsCheck, $alias);
 
                 $inner->whereRaw("{$parentIdName} is not null")
-                      ->addWhereExistsQuery($existsCheck, 'and', true);
+                      ->addWhereExistsQuery($existsCheck->toBase(), 'and', true);
             });
     }
 
