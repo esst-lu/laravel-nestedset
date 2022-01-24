@@ -1,44 +1,45 @@
 <?php
 
-use Illuminate\Database\Capsule\Manager as Capsule;
+namespace Kalnoy\Nestedset\Test;
+
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
 use Kalnoy\Nestedset\NestedSet;
+use Kalnoy\Nestedset\Test\Models\MenuItem;
+use LogicException;
 
-class ScopedNodeTest extends PHPUnit\Framework\TestCase
+class ScopedNodeTest extends TestCase
 {
-    public static function setUpBeforeClass()
+    public function setup(): void
     {
-        $schema = Capsule::schema();
+        parent::setup();
 
-        $schema->dropIfExists('menu_items');
+        Schema::dropIfExists('menu_items');
 
-        Capsule::disableQueryLog();
+        DB::disableQueryLog();
 
-        $schema->create('menu_items', function (\Illuminate\Database\Schema\Blueprint $table) {
+        Schema::create('menu_items', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('menu_id');
             $table->string('title')->nullable();
             NestedSet::columns($table);
         });
 
-        Capsule::enableQueryLog();
-    }
+        DB::enableQueryLog();
 
-    public function setUp()
-    {
         $data = include __DIR__.'/data/menu_items.php';
 
-        Capsule::table('menu_items')->insert($data);
+        DB::table('menu_items')->insert($data);
 
-        Capsule::flushQueryLog();
+        DB::flushQueryLog();
 
         MenuItem::resetActionsPerformed();
-
-        date_default_timezone_set('America/Denver');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
-        Capsule::table('menu_items')->truncate();
+        DB::table('menu_items')->truncate();
     }
 
     public function assertTreeNotBroken($menuId)
@@ -159,12 +160,11 @@ class ScopedNodeTest extends PHPUnit\Framework\TestCase
         $this->assertOtherScopeNotAffected();
     }
 
-    /**
-     * @expectedException \Illuminate\Database\Eloquent\ModelNotFoundException
-     */
     public function testInsertionToParentFromOtherScope()
     {
-        $node = MenuItem::create([ 'menu_id' => 2, 'parent_id' => 5 ]);
+        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+
+        MenuItem::create([ 'menu_id' => 2, 'parent_id' => 5 ]);
     }
 
     public function testDeletion()
@@ -201,22 +201,20 @@ class ScopedNodeTest extends PHPUnit\Framework\TestCase
         MenuItem::scoped([ 'menu_id' => 2 ])->rebuildTree($data);
     }*/
 
-    /**
-     * @expectedException LogicException
-     */
     public function testAppendingToAnotherScopeFails()
     {
+        $this->expectException(LogicException::class);
+
         $a = MenuItem::find(1);
         $b = MenuItem::find(3);
 
         $a->appendToNode($b)->save();
     }
 
-    /**
-     * @expectedException LogicException
-     */
     public function testInsertingBeforeAnotherScopeFails()
     {
+        $this->expectException(LogicException::class);
+
         $a = MenuItem::find(1);
         $b = MenuItem::find(3);
 

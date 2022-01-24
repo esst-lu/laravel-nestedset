@@ -1,13 +1,17 @@
 <?php
 
+namespace Kalnoy\Nestedset\Test\Models;
 
-class MenuItem extends \Illuminate\Database\Eloquent\Model
+use Illuminate\Database\Eloquent\Model;
+use Kalnoy\Nestedset\NodeTrait;
+
+class MenuItem extends Model
 {
-    use \Kalnoy\Nestedset\NodeTrait;
+    use NodeTrait;
 
     public $timestamps = false;
 
-    protected $fillable = ['menu_id','parent_id'];
+    protected $fillable = ['menu_id', 'parent_id'];
 
     public static function resetActionsPerformed()
     {
@@ -18,5 +22,4 @@ class MenuItem extends \Illuminate\Database\Eloquent\Model
     {
         return ['menu_id'];
     }
-
 }
