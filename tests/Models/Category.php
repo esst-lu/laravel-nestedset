@@ -11,7 +11,7 @@ class Category extends Model
     use SoftDeletes;
     use NodeTrait;
 
-    protected $fillable = array('name', 'parent_id');
+    protected $fillable = ['name', 'parent_id'];
 
     public $timestamps = false;
 

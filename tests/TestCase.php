@@ -35,8 +35,8 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
 
         config()->set('auth.providers.users.model', User::class);
         config()->set('app.key', 'base64:'.base64_encode(
-                Encrypter::generateKey(config()['app.cipher'])
-            ));
+            Encrypter::generateKey(config()['app.cipher'])
+        ));
     }
 
     protected function getApplicationTimezone($app): string
