@@ -2,11 +2,11 @@
 
 namespace Kalnoy\Nestedset;
 
+use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\Query\Builder as BaseQueryBuilder;
-use Illuminate\Database\Query\Builder as Query;
 use Illuminate\Database\Query\Expression;
 use Illuminate\Support\Arr;
 use LogicException;
@@ -575,7 +575,7 @@ class QueryBuilder extends Builder
 
         $boundary = [ $from, $to ];
 
-        $query = $this->toBase()->where(function (Query $inner) use ($boundary) {
+        $query = $this->toBase()->where(function (BaseQueryBuilder $inner) use ($boundary) {
             $inner->whereBetween($this->model->getLftName(), $boundary);
             $inner->orWhereBetween($this->model->getRgtName(), $boundary);
         });
@@ -597,7 +597,7 @@ class QueryBuilder extends Builder
     {
         $params = compact('cut', 'height');
 
-        $query = $this->toBase()->whereNested(function (Query $inner) use ($cut) {
+        $query = $this->toBase()->whereNested(function (BaseQueryBuilder $inner) use ($cut) {
             $inner->where($this->model->getLftName(), '>=', $cut);
             $inner->orWhere($this->model->getRgtName(), '>=', $cut);
         });
