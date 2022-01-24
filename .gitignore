@@ -1,7 +1,8 @@
 /vendor
 /.idea
+/build
 composer.phar
 composer.lock
 .DS_Store
-build/
 .phpunit.result.cache
+.php-cs-fixer.cache

@@ -28,7 +28,7 @@ class QueryBuilder extends Builder
      *
      * @return array
      */
-    public function getNodeData($id, $required = false)
+    public function getNodeData(mixed $id, bool $required = false): array
     {
         $query = $this->toBase();
 

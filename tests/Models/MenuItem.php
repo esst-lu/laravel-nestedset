@@ -18,7 +18,7 @@ class MenuItem extends Model
         static::$actionsPerformed = 0;
     }
 
-    protected function getScopeAttributes()
+    protected function getScopeAttributes(): array
     {
         return ['menu_id'];
     }
