@@ -805,7 +805,7 @@ class QueryBuilder extends Builder
      *
      * @return $this
      */
-    protected function getMissingParentQuery($callback = null)
+    protected function getMissingParentQuery(Closure|null $callback = null)
     {
         return $this->model
             ->newNestedSetQuery()
@@ -823,7 +823,6 @@ class QueryBuilder extends Builder
                 $existsCheck = $this->model
                     ->newNestedSetQuery()
                     ->when($callback, $callback)
-                    ->toBase()
                     ->selectRaw('1')
                     ->from($this->query->raw("{$table} as {$wrappedAlias}"))
                     ->whereRaw("{$table}.{$parentIdName} = {$wrappedAlias}.{$keyName}")
