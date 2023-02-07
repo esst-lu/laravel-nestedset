@@ -939,45 +939,11 @@ class QueryBuilder extends Builder
             $updated[] = $parent->rawNode($parent->getLft(), $cut, $parent->getParentId());
         }
         
-        /*foreach ($updated as $model) {
+        foreach ($updated as $model) {
             $model->save();
-        }*/
-
-        $countUpdated = count($updated);
-
-        $keyName = $this->model->getKeyName();
-        $tableName = $this->model->getTable();
-        $lftName = $this->model->getLftName();
-        $rgtName = $this->model->getRgtName();
-        $parentName = $this->model->getParentIdName();
-
-        $parentIds = [];
-        $lftIds = [];
-        $rgtIds = [];
-
-        foreach ($updated as $m) {
-            if (empty($m->{$parentName})) {
-                $parentId = 'NULL';
-            } else {
-                $parentId = "'".$m->{$parentName}."'";
-            }
-
-            $parentIds[] = "WHEN '".$m->{$keyName}."' THEN ".$parentId."";
-            $lftIds[] = "WHEN '".$m->{$keyName}."' THEN '".$m->{$lftName}."'";
-            $rgtIds[] = "WHEN '".$m->{$keyName}."' THEN '".$m->{$rgtName}."'";
         }
-
-
-        if ($countUpdated > 0) {
-            DB::update(
-                "UPDATE `{$tableName}` 
-                SET {$parentName} = (CASE $keyName " . implode(' ', $parentIds) . " END), 
-                {$lftName} = (CASE $keyName " . implode(' ', $lftIds) . " END), 
-                {$rgtName} = (CASE $keyName " . implode(' ', $rgtIds) . " END)"
-            );
-        }
-
-        return $countUpdated + $moved;
+        
+        return count($updated) + $moved;
     }
 
     /**
