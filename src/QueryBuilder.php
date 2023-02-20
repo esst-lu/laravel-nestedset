@@ -972,7 +972,7 @@ class QueryBuilder extends Builder
             $cut = self::reorderNodes($dictionary, $updated, $model->getKey(), $cut + 1);
 
             if ($model->rawNode($lft, $cut, $parentId)->isDirty()) {
-                $updated[] = $model;
+                $updated->add($model);
             }
 
             ++$cut;
