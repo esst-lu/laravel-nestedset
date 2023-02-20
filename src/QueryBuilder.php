@@ -919,7 +919,7 @@ class QueryBuilder extends Builder
         $parentId = $parent ? $parent->getKey() : null;
         $cut = $parent ? $parent->getLft() + 1 : 1;
 
-        $updated = [];
+        $updated = collect([]);
         $moved = 0;
 
         $cut = self::reorderNodes($dictionary, $updated, $parentId, $cut);
@@ -936,12 +936,12 @@ class QueryBuilder extends Builder
         if ($parent && ($grown = $cut - $parent->getRgt()) != 0) {
             $moved = $this->model->newScopedQuery()->makeGap($parent->getRgt() + 1, $grown);
 
-            $updated[] = $parent->rawNode($parent->getLft(), $cut, $parent->getParentId());
+            $updated->add($parent->rawNode($parent->getLft(), $cut, $parent->getParentId()));
         }
-        
-        foreach ($updated as $model) {
+
+        $updated->chunk(500, function($model) {
             $model->save();
-        }
+        });
         
         return count($updated) + $moved;
     }
@@ -957,7 +957,7 @@ class QueryBuilder extends Builder
      */
     protected static function reorderNodes(
         array &$dictionary,
-        array &$updated,
+        \Illuminate\Support\Collection &$updated,
         $parentId = null,
         $cut = 1
     ) {
