@@ -17,14 +17,14 @@
   ],
   "require": {
     "php": "^8.0",
-    "illuminate/support": "^9.0 || ^10.0",
-    "illuminate/database": "^9.0 || ^10.0",
-    "illuminate/events": "^9.0 || ^10.0"
+    "illuminate/support": "^10.0 || ^11.0",
+    "illuminate/database": "^10.0 || ^11.0",
+    "illuminate/events": "^10.0 || ^11.0"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^3.0",
     "orchestra/testbench": "^7.0 || ^8.0",
-    "phpunit/phpunit": "^9.5"
+    "phpunit/phpunit": "^11.0"
   },
   "scripts": {
     "test": "vendor/bin/phpunit",
